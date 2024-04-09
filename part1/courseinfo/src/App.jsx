@@ -4,20 +4,20 @@ import { Total } from './components/Total'
 
 function App() {
   const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of component'
-  const exercises3 = 14
+  const parts = [
+    ['Fundamentals of React', 10],
+    ['Using props to pass data', 7],
+    ['State of component', 14]
+  ]
+
+  // eslint-disable-next-line no-unused-vars
+  const sumExercises = parts.reduce((acc, [_, exercises]) => acc + exercises, 0)
 
   return (
     <div>
       <Header content={course} />
-      <Content part={part1} exercises={exercises1}/>
-      <Content part={part2} exercises={exercises2}/>
-      <Content part={part3} exercises={exercises3}/>
-      <Total total={exercises1 + exercises2 + exercises3}/>
+      <Content parts={parts} />
+      <Total total={sumExercises} />
     </div>
   )
 }
