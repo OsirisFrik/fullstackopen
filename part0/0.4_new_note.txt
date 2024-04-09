@@ -1,0 +1,39 @@
+sequenceDiagram
+    participant Browser
+    participant Server
+
+    note over Browser: Form submit new note
+    Browser->>Server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate Server
+    note over Browser,Server: payload `note=040820241803`
+    note over Server: Store note
+    Server-->>Browser: 302 Found
+    deactivate Server
+    note over Browser: Redirect to
+    Browser->>Server: GET  https://studies.cs.helsinki.fi/exampleapp/notes
+    activate Server
+    activate Browser
+    Server-->>Browser: HTML Code
+    deactivate Server
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate Server
+    activate Browser
+    Server-->>Browser: CSS  file
+    deactivate Server
+    deactivate Browser
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate Server
+    activate Browser
+    Server-->>Browser: JS file
+    deactivate Server
+    deactivate Browser
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate Server
+    activate Browser
+    note over Server: Retrieve notes
+    Server-->>Browser: Return record of notes notes JSON
+    deactivate Browser
+    deactivate Server
+    note over Server,Browser: [{"content": "040820241803", "date": "2024-04-09T01:03:54.529Z"}]
+    deactivate Browser
+    note over Browser: Render data

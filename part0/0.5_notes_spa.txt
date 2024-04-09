@@ -1,0 +1,26 @@
+sequenceDiagram
+    participant Browser
+    participant Server
+
+    note over Browser: Client join
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    Server-->>Browser: Return HTML
+    activate Browser
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate Browser
+    Server-->>Browser: Return CSS file
+    deactivate Browser
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+    activate Browser
+    Server-->>Browser: Return JS file
+    deactivate Browser
+    note over Browser: spa.js load data
+    activate Browser
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate Server
+    note over Server: Retrieve notes
+    Server-->>Browser: Return JSON with notes
+    note over Server,Browser: [{"content": "040820241803", "date": "2024-04-09T01:03:54.529Z"}]
+    deactivate Browser
+    note over Browser: spa.js render response data
+    deactivate Browser

@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant Browser
+    participant Server
+
+    note over Browser: Form submit event catched by event handler
+    activate Browser
+    note over Browser: The submit event handler adds the message to the previous array and redraw list
+    Browser->>Server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    activate Server
+    note over Browser,Server: payload `{"content":"040820241929","date":"2024-04-09T02:29:11.678Z"}`
+    note over Server: store note
+
+    Server-->>Browser: Server return 201
+    deactivate Server
+
+    note over Server,Browser: `{"message":"note created"}`
+    deactivate Browser
