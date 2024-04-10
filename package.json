@@ -1,0 +1,13 @@
+{
+  "name": "full-stack-open",
+  "version": "1.0.0",
+  "description": "FullStack Open Course",
+  "main": "index.js",
+  "repository": "git@github.com:OsirisFrik/fullstackopen.git",
+  "author": "osirisfrik <osirisfrik>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "part1/*"
+  ]
+}
