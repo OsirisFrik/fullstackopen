@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "part1/*"
+    "part1/*",
+    "part2/*"
   ]
 }
