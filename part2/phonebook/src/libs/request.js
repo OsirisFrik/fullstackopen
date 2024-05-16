@@ -4,6 +4,31 @@ export const request = axios.create({
   baseURL: import.meta.env.VITE_API_URL
 })
 
+request.interceptors.response.use(
+  (res) => {
+    console.log(res)
+
+    if (res.status === 200) return res
+
+    if (res.status === 404) {
+      console.log(res)
+
+      return Promise.reject({
+        type: 'error',
+        message: 'Phone not found'
+      })
+    }
+  },
+  (err) => {
+    console.log(err)
+
+    return Promise.reject({
+      type: 'error',
+      message: 'Phone not found'
+    })
+  }
+)
+
 export async function getPersons() {
   const response = await request({
     url: '/persons',
