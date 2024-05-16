@@ -1,11 +1,14 @@
-import { Contact } from './Contact';
+import { Contact } from './Contact'
 
-export function Contacts({ contacts }) {
+export function Contacts({ contacts, deleteHandler = () => false }) {
   return (
     <ul>
       {contacts.map((contact) => (
         <li key={contact.name}>
-          <Contact contact={contact}/>
+          <Contact contact={contact} />
+          <button className='' onClick={() => deleteHandler(contact.id)}>
+            delete
+          </button>
         </li>
       ))}
     </ul>

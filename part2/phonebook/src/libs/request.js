@@ -13,11 +13,29 @@ export async function getPersons() {
   return response.data
 }
 
-
 export async function addPerson(person) {
   const response = await request({
     url: '/persons',
     method: 'POST',
+    data: person
+  })
+
+  return response.data
+}
+
+export async function deletePerson(id) {
+  const response = await request({
+    url: `/persons/${id}`,
+    method: 'DELETE'
+  })
+
+  return response.data
+}
+
+export async function updatePerson(person) {
+  const response = await request({
+    url: `/persons/${person.id}`,
+    method: 'PUT',
     data: person
   })
 
