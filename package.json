@@ -9,6 +9,13 @@
   "private": true,
   "workspaces": [
     "part1/*",
-    "part2/*"
-  ]
+    "part2/*",
+    "resources"
+  ],
+  "scripts": {
+    "api:persons": "npm run persons -w resources"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
 }
