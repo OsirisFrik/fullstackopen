@@ -1,7 +1,9 @@
 import express from 'express'
 import morgan from 'morgan'
+import cors from 'cors'
 
 import PersonsCtrl from './controllers/persons.js'
+import { STATIC_DIR } from './config.js'
 
 const app = express()
 
@@ -11,6 +13,8 @@ morgan.token('body', (req) =>
 
 app
   .use(express.json())
+  .use(cors())
+  .use(express.static(STATIC_DIR))
   .use(
     morgan((tokens, req, res) => {
       return [
