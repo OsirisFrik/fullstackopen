@@ -1,23 +1,39 @@
 import { Router } from 'express'
-import fs from 'fs'
 
-import { persons } from '../db/index.js'
+import { getPersonById, getPersons } from '../models/PhoneBook.js'
 
 const router = Router()
 
-router.get('/api/persons', (req, res) => {
-  return res.json(persons)
+router.get('/api/persons', async (req, res) => {
+  try {
+    const persons = await getPersons()
+
+    return res.json(persons)
+  } catch (err) {
+    console.trace(err)
+
+    res.status(500).send()
+  }
 })
 
-router.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find((p) => p.id === id)
+router.get('/api/persons/:id', async (req, res) => {
+  try {
+    const id = req.params.id
 
-  if (person) {
+    if (!id) {
+      return res.status(400).send('invalid param id')
+    }
+
+    const person = await getPersonById(id)
+
+    if (!person) return res.status(404).send()
+
     return res.json(person)
-  }
+  } catch (err) {
+    console.trace(err)
 
-  return res.status(404).end()
+    res.status(500).send()
+  }
 })
 
 router.delete('/api/persons/:id', (req, res) => {
