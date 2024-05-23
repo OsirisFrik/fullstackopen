@@ -38,10 +38,10 @@ try {
   app.get('/info', (req, res) => {
     const date = new Date()
     const body = `
-  <p>Phonebook has info for ${persons.length} people</p>
-  <br/>
-  <p>${date.toString()}</p>
-  `
+    <p>Phonebook has info for ${persons.length} people</p>
+    <br/>
+    <p>${date.toString()}</p>
+    `
 
     return res.write(body)
   })

@@ -6,7 +6,7 @@ export function Contacts({ contacts, deleteHandler = () => false }) {
       {contacts.map((contact) => (
         <li key={contact.name}>
           <Contact contact={contact} />
-          <button className='' onClick={() => deleteHandler(contact.id)}>
+          <button className='' onClick={() => deleteHandler(contact._id)}>
             delete
           </button>
         </li>

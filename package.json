@@ -14,9 +14,11 @@
     "resources"
   ],
   "scripts": {
-    "api:persons": "npm run persons -w resources"
+    "api:persons": "npm run persons -w resources",
+    "dev:3": "concurrently -n backend,front \"npm run dev -w backend\" \"npm run dev -w phonebook\""
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "prettier": "^3.2.5"
   }
 }

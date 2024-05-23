@@ -16,15 +16,19 @@ const App = () => {
   const [messages, setMessages] = useState([])
 
   useEffect(() => {
-    getPersons()
-      .then((data) => setPersons(data))
-      .catch((err) => setMessages([...messages, err]))
+    loadPersons()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     setFilteredContacts([...persons])
   }, [persons])
+
+  const loadPersons = async () => {
+    const data = await getPersons()
+
+    setPersons(data)
+  }
 
   const submitHandler = async ({ name, number }) => {
     const existsIndex = persons.findIndex(
@@ -44,20 +48,17 @@ const App = () => {
             ...person,
             number
           })
-
-          setPersons(
-            persons.map((contact) =>
-              contact.id === person.id ? person : contact
-            )
-          )
           setMessages([
             ...messages,
             { type: 'success', message: `${person.name} has been updated` }
           ])
+          loadPersons()
 
           return
         } catch (err) {
           setMessages([...messages, err])
+
+          return
         }
       }
     }
@@ -65,8 +66,7 @@ const App = () => {
     try {
       const person = await addPerson({
         name,
-        number,
-        id: `${persons.length + 1}`
+        number
       })
 
       setPersons([...persons, person])
@@ -75,21 +75,24 @@ const App = () => {
         { type: 'success', message: `${person.name} has been added` }
       ])
     } catch (err) {
+      console.log(err)
       setMessages([...messages, err])
     }
   }
 
   const deleteHandler = async (id) => {
     try {
-      const item = persons.find((contact) => contact.id === id)
+      const item = persons.find((contact) => contact._id === id)
+
+      console.log(id)
 
       if (window.confirm(`Delete ${item.name}?`)) {
         await deletePerson(id)
-        setPersons(persons.filter((contact) => contact.id !== id))
         setMessages([
           ...messages,
           { type: 'error', message: `${item.name} has been deleted` }
         ])
+        loadPersons()
       }
     } catch (err) {
       console.log(err)

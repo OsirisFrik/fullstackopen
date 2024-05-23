@@ -13,19 +13,22 @@ request.interceptors.response.use(
     if (res.status === 404) {
       console.log(res)
 
-      return Promise.reject({
-        type: 'error',
-        message: 'Phone not found'
-      })
+      return Promise.reject(res)
     }
   },
   (err) => {
+    console.group('Request error:')
     console.log(err)
+    console.groupEnd()
 
-    return Promise.reject({
-      type: 'error',
-      message: 'Phone not found'
-    })
+    if (err.response && err.response.data) {
+      return Promise.reject({
+        ...err.response.data,
+        type: 'error'
+      })
+    }
+
+    return Promise.reject(err)
   }
 )
 
@@ -59,7 +62,7 @@ export async function deletePerson(id) {
 
 export async function updatePerson(person) {
   const response = await request({
-    url: `/persons/${person.id}`,
+    url: `/persons/${person._id}`,
     method: 'PUT',
     data: person
   })

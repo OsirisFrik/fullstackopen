@@ -1,8 +1,32 @@
 import { Router } from 'express'
 
-import { getPersonById, getPersons } from '../models/PhoneBook.js'
+import {
+  createPerson,
+  deletePerson,
+  existsPerson,
+  getPersonById,
+  getPersons,
+  updatePerson
+} from '../models/PhoneBook.js'
+import { isValidObjectId } from 'mongoose'
 
 const router = Router()
+
+router.use('/api/persons/:id', async (req, res, next) => {
+  const id = req.params.id
+
+  if (!id || !isValidObjectId(id)) {
+    return res.status(400).send('invalid id')
+  }
+
+  console.log(`md - id = ${id}`)
+
+  const exists = await existsPerson(id)
+
+  if (!exists) return res.status(404).send()
+
+  return next()
+})
 
 router.get('/api/persons', async (req, res) => {
   try {
@@ -12,69 +36,90 @@ router.get('/api/persons', async (req, res) => {
   } catch (err) {
     console.trace(err)
 
-    res.status(500).send()
+    res.status(500).send({
+      message: err.message
+    })
   }
 })
 
 router.get('/api/persons/:id', async (req, res) => {
   try {
     const id = req.params.id
-
-    if (!id) {
-      return res.status(400).send('invalid param id')
-    }
-
     const person = await getPersonById(id)
 
-    if (!person) return res.status(404).send()
+    if (!person) return res.status(404).send('person not found')
 
     return res.json(person)
   } catch (err) {
     console.trace(err)
 
-    res.status(500).send()
+    res.status(500).send({
+      message: err.message
+    })
   }
 })
 
-router.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find((p) => p.id === id)
+router.delete('/api/persons/:id', async (req, res) => {
+  try {
+    const id = req.params.id
 
-  if (person) {
-    persons.splice(persons.indexOf(person), 1)
+    await deletePerson(id)
 
-    return res.status(204).end()
+    return res.status(200).send()
+  } catch (err) {
+    console.trace(err)
+
+    res.status(500).send({
+      message: err.message
+    })
   }
-
-  return res.status(404).end()
 })
 
-router.post('/api/persons', (req, res) => {
-  const body = req.body
+router.post('/api/persons', async (req, res) => {
+  try {
+    const body = req.body
 
-  if (!body || !body.name || !body.number) {
-    return res.status(400).json({
-      error: 'name or number missing'
+    // if (!body || !body.name || !body.number) {
+    //   return res.status(400).json({
+    //     error: 'name or number missing'
+    //   })
+    // }
+
+    const person = await createPerson(body)
+
+    return res.json(person)
+  } catch (err) {
+    console.trace(err)
+
+    res.status(500).send({
+      message: err.message
     })
   }
+})
 
-  const person = persons.find((p) => p.name === body.name)
+router.put('/api/persons/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    const body = req.body
 
-  if (person) {
-    return res.status(400).json({
-      error: 'this person already exists'
+    if (!body || !body.name || !body.number) {
+      return res.status(400).json({
+        error: 'name or number missing'
+      })
+    }
+
+    const person = await updatePerson(id, body)
+
+    if (!person) return res.status(404).send('person not found')
+
+    return res.json(person)
+  } catch (err) {
+    console.trace(err)
+
+    res.status(500).send({
+      message: err.message
     })
   }
-
-  const newPerson = {
-    name: body.name,
-    number: body.number,
-    id: Math.floor(Math.random() * 10000000000)
-  }
-
-  persons.push(newPerson)
-
-  return res.json(newPerson)
 })
 
 export default router
