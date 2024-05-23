@@ -14,16 +14,15 @@ RUN mkdir /app
 ADD ./part2/phonebook $FRONT_DIR
 ADD ./part3/backend $BACK_DIR
 
-RUN export VITE_API_URL=$VITE_API_URL
-
 WORKDIR $FRONT_DIR
 
-RUN yarn
+RUN yarn install
 RUN yarn build
 
 WORKDIR /app/backend
 
-RUN yarn
+RUN yarn install
+RUN yarn lint
 
 EXPOSE $PORT
 

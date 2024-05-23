@@ -5,10 +5,17 @@ import cors from 'cors'
 import PersonsCtrl from './controllers/persons.js'
 import { MONGO_URI, STATIC_DIR } from './config.js'
 import mongoose from 'mongoose'
+import { getPersons } from './models/PhoneBook.js'
 
 try {
   const app = express()
   const client = await mongoose.connect(MONGO_URI)
+
+  process.addListener('exit', async () => {
+    console.log('Exit DB client')
+
+    await client.disconnect()
+  })
 
   morgan.token('body', (req) =>
     req.method === 'POST' ? JSON.stringify(req.body) : ''
@@ -35,7 +42,8 @@ try {
     )
     .use(PersonsCtrl)
 
-  app.get('/info', (req, res) => {
+  app.get('/info', async (req, res) => {
+    const persons = await getPersons()
     const date = new Date()
     const body = `
     <p>Phonebook has info for ${persons.length} people</p>
